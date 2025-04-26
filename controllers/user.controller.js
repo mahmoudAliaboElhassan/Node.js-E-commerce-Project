@@ -95,15 +95,27 @@ const login = asyncWrapper(async (req, res, next) => {
 });
 
 const change_password = asyncWrapper(async (req, res, next) => {
-  const token = req?.cookies?.JwtToken;
+  const token = req.cookies.JwtToken;
   const { id } = req.params;
   const { password, newPassword } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = appError.create(
+      errors
+        .array()
+        .map((error) => error.msg)
+        .join(", "),
+      400,
+      httpStatusText.FAIL
+    );
+    return next(error);
+  }
   const user = await User.findOne({ _id: id });
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
   console.log("decoded", decoded);
   console.log("decoded.id", decoded.id);
   console.log("user", user);
-  console.log("user.id", user._id.toString());
+  console.log("user.id", user?._id.toString());
   if (!user) {
     const error = appError.create(
       "This user is not exists",
