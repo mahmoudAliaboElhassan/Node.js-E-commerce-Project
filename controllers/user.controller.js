@@ -8,7 +8,8 @@ const jwt = require("jsonwebtoken");
 const { generateAccessToken } = require("../utils/generateToken");
 
 const signup = asyncWrapper(async (req, res, next) => {
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName, lastName, email, password, role } = req.body;
+  const avatar = req.file?.path || "/uploads/clothes.jpg";
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = appError.create(
@@ -21,7 +22,6 @@ const signup = asyncWrapper(async (req, res, next) => {
     );
     return next(error);
   }
-
   const user = await User.findOne({ email: email });
   if (user) {
     const error = appError.create(
@@ -38,6 +38,8 @@ const signup = asyncWrapper(async (req, res, next) => {
     lastName,
     email,
     password: hashedPassword,
+    role,
+    avatar,
   });
   await newUser.save();
   res.status(201).json({
@@ -46,6 +48,7 @@ const signup = asyncWrapper(async (req, res, next) => {
   });
   return { message: "user created successfully" };
 });
+
 const login = asyncWrapper(async (req, res, next) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
@@ -156,4 +159,13 @@ const change_password = asyncWrapper(async (req, res, next) => {
     },
   });
 });
-module.exports = { login, signup, change_password };
+const logout = asyncWrapper(async (req, res, next) => {
+  res.clearCookie("JwtToken");
+  res.status(200).json({
+    status: httpStatusText.SUCESS,
+    data: { message: "user logged out successfully" },
+  });
+  return { message: "user logged out successfully" };
+});
+
+module.exports = { login, signup, change_password, logout };

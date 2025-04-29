@@ -63,8 +63,49 @@ const validationSchemaChangePassword = () => {
   ];
 };
 
+const validationSchemaCreateProduct = () => [
+  body("title")
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ min: 3 })
+    .withMessage("Title must be at least 3 characters long"),
+
+  body("description")
+    .notEmpty()
+    .withMessage("Description cannot be empty")
+    .isLength({ min: 10 })
+    .withMessage("Description must be at least 10 characters long"),
+
+  body("price")
+    .notEmpty()
+    .withMessage("Price is required")
+    .isFloat({ min: 1 })
+    .withMessage("Price must be a positive number"),
+
+  body("quantity")
+    .notEmpty()
+    .withMessage("Quantity is required")
+    .isInt({ min: 1 })
+    .withMessage("Quantity must be a positive integer"),
+
+  body("productImgs")
+    .optional()
+    .isArray()
+    .withMessage("productImgs must be an array of strings")
+    .custom((arr) => arr.every((img) => typeof img === "string"))
+    .withMessage("All productImgs must be strings"),
+
+  body("productCover")
+    .optional()
+    .isArray()
+    .withMessage("productCover must be an array of strings")
+    .custom((arr) => arr.every((img) => typeof img === "string"))
+    .withMessage("All productCover items must be strings"),
+];
+
 module.exports = {
   validationSchemaLogin,
   validationSchemaSignup,
   validationSchemaChangePassword,
+  validationSchemaCreateProduct,
 };
