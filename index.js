@@ -32,8 +32,10 @@ mongoose
     console.log("error in connection", err);
   });
 
-app.get("/hello", (req, res) => {
-  res.send("home page");
+app.get("", (req, res) => {
+  res.send(
+    "<h1>Welcome to the ecommerce project</h1><br><h2>API Documentation</h2><br><a href='https://app.getpostman.com/join-team?invite_code=5962b4518ca0f7614c66dd9b10c6d7428ed6a2dcf7dc165b1222831c979182f3&target_code=8d36ea9e5ca278fe46c9b1767cda657c'>Click here</a>"
+  );
 });
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
