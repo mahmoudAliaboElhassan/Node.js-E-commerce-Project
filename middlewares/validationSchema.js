@@ -102,10 +102,24 @@ const validationSchemaCreateProduct = () => [
     .custom((arr) => arr.every((img) => typeof img === "string"))
     .withMessage("All productCover items must be strings"),
 ];
+const validationSchemaBuyProduct = () => [
+  body("price")
+    .notEmpty()
+    .withMessage("Price is required")
+    .isFloat({ min: 1 })
+    .withMessage("Price must be a positive number"),
+
+  body("quantity")
+    .notEmpty()
+    .withMessage("Quantity is required")
+    .isInt({ min: 1 })
+    .withMessage("Quantity must be a positive integer"),
+];
 
 module.exports = {
   validationSchemaLogin,
   validationSchemaSignup,
   validationSchemaChangePassword,
   validationSchemaCreateProduct,
+  validationSchemaBuyProduct,
 };

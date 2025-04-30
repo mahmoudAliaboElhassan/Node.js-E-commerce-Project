@@ -17,6 +17,7 @@ app.use(cors());
 
 const userRouter = require("./routes/user.route");
 const productRouter = require("./routes/product.route");
+const orderRouter = require("./routes/order.rotue");
 
 const url = process.env.MONGO_URL;
 mongoose
@@ -39,6 +40,8 @@ app.get("", (req, res) => {
 });
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
 
 app.all(/.*/, (req, res, next) => {
   // every request will pass through this middleware

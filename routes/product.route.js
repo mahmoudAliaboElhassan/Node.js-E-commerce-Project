@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   validationSchemaCreateProduct,
+  validationSchemaBuyProduct,
 } = require("../middlewares/validationSchema");
 
 const productController = require("../controllers/product.controller");
@@ -48,5 +49,11 @@ router
   )
   .delete(verifyAdmin, productController.deleteProduct);
 
-router.route("/buy/:id").post(verifyToken, productController.buyProduct);
+router
+  .route("/buy/:id")
+  .post(
+    verifyToken,
+    validationSchemaBuyProduct(),
+    productController.buyProduct
+  );
 module.exports = router;

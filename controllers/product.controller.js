@@ -2,9 +2,11 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const Product = require("../models/porduct.model");
 const User = require("../models/user.model");
+const Order = require("../models/order.model");
 const httpStatusText = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
+const orderStatus = require("../utils/orderStatus");
 
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   let {
@@ -113,6 +115,7 @@ const createProduct = asyncWrapper(async (req, res, next) => {
     productCover,
     productImgs,
   });
+
   await newProduct.save();
   res.status(201).json({
     status: httpStatusText.SUCESS,
@@ -206,7 +209,20 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
 
   const userId = decoded.id;
   const productId = req.params.id;
-  const { price } = req.body;
+  const { price, quantity } = req.body;
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const error = appError.create(
+      errors
+        .array()
+        .map((error) => error.msg)
+        .join(", "),
+      400,
+      httpStatusText.FAIL
+    );
+    return next(error);
+  }
 
   const product = await Product.findById(productId);
   if (!product) {
@@ -224,7 +240,7 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
   }
 
   // Check price match
-  if (price !== product.price) {
+  if (price !== product.price * quantity) {
     return next(
       appError.create("Incorrect price provided", 400, httpStatusText.FAIL)
     );
@@ -236,15 +252,15 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
     );
   }
 
-  if (product.buyers.includes(userId)) {
-    return next(
-      appError.create(
-        "You have already bought this product",
-        400,
-        httpStatusText.FAIL
-      )
-    );
-  }
+  // if (product.buyers.includes(userId)) {
+  //   return next(
+  //     appError.create(
+  //       "You have already bought this product",
+  //       400,
+  //       httpStatusText.FAIL
+  //     )
+  //   );
+  // }
 
   // Update product
   product.buyers.push(userId);
@@ -253,8 +269,17 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
   // Update user
   const user = await User.findById(userId);
   user.productsBought.push(productId);
+  const order = new Order({
+    quantity,
+    price: product.price,
+    totalPrice: price,
+    status: orderStatus.PENDING,
+    user: userId,
+    product: productId,
+  });
 
   // Save changes
+  await order.save();
   await product.save();
   await user.save();
 
