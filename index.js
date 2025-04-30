@@ -20,7 +20,11 @@ const productRouter = require("./routes/product.route");
 
 const url = process.env.MONGO_URL;
 mongoose
-  .connect(url)
+  .connect(url, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 20000,
+  })
   .then(() => {
     console.log("connected Successfully ");
   })
