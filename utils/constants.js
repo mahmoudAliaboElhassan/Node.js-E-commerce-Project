@@ -1,2 +1,2 @@
-const DOCUMENTSPERSPAGE = 3;
-module.exports = { DOCUMENTSPERSPAGE };
+const DOCUMENTS_PER_PAGE = 2;
+module.exports = { DOCUMENTS_PER_PAGE };

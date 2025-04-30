@@ -2,16 +2,17 @@ const asyncWrapper = require("../middlewares/asyncWrapper");
 const Order = require("../models/order.model");
 const appError = require("../utils/appError");
 const httpStatusText = require("../utils/httpStatusText");
+const { DOCUMENTS_PER_PAGE } = require("../utils/constants");
 
 const getAllOrders = asyncWrapper(async (req, res, next) => {
-  const { page = 1, limit = 10 } = req.query;
-  const skip = (page - 1) * limit;
+  const { page = 1 } = req.query;
+  const skip = (page - 1) * DOCUMENTS_PER_PAGE;
 
   const orders = await Order.find()
     .populate("user", "-password")
     .populate("product", "-password")
     .skip(skip)
-    .limit(limit);
+    .limit(DOCUMENTS_PER_PAGE);
 
   const totalOrders = await Order.countDocuments();
 
@@ -21,7 +22,7 @@ const getAllOrders = asyncWrapper(async (req, res, next) => {
     data: {
       total: totalOrders,
       page,
-      pages: Math.ceil(totalOrders / limit),
+      pages: Math.ceil(totalOrders / DOCUMENTS_PER_PAGE),
       count: orders.length,
       orders,
     },
