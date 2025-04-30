@@ -7,12 +7,12 @@ const httpStatusText = require("../utils/httpStatusText");
 const asyncWrapper = require("../middlewares/asyncWrapper");
 const appError = require("../utils/appError");
 const orderStatus = require("../utils/orderStatus");
+const { DOCUMENTS_PER_PAGE } = require("../utils/constants");
 
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   let {
     search = "",
     page = 1,
-    limit = 10,
     sortBy = "createdAt",
     order = "desc",
     priceMin,
@@ -21,7 +21,6 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
   } = req.query;
 
   page = parseInt(page);
-  limit = parseInt(limit);
 
   const filter = {};
 
@@ -51,15 +50,15 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
     .populate("seller", "-password") // populate seller without password
     .populate("buyers", "-password") // populate buyers without password
     .sort({ [sortBy]: order === "asc" ? 1 : -1 })
-    .skip((page - 1) * limit)
-    .limit(limit);
+    .skip((page - 1) * DOCUMENTS_PER_PAGE)
+    .limit(DOCUMENTS_PER_PAGE);
 
   res.status(200).json({
     status: httpStatusText.SUCESS,
     data: {
       total: totalProducts,
       page,
-      pages: Math.ceil(totalProducts / limit),
+      pages: Math.ceil(totalProducts / DOCUMENTS_PER_PAGE),
       count: products.length,
       products,
     },
