@@ -115,11 +115,34 @@ const validationSchemaBuyProduct = () => [
     .isInt({ min: 1 })
     .withMessage("Quantity must be a positive integer"),
 ];
-
+const validationSchemaForgetPassword = () => {
+  return [
+    body("email")
+      .notEmpty()
+      .withMessage("email can not be empty")
+      .isEmail()
+      .withMessage("email is not valid"),
+  ];
+};
+const validationSchemaResetPassword = () => {
+  return [
+    body("password")
+      .notEmpty()
+      .withMessage("new password can not be empty")
+      .isLength({ min: 8 })
+      .withMessage("New password must be at least 8 characters long")
+      .matches(/[0-9]/)
+      .withMessage("New password must contain at least one number")
+      .matches(/[a-zA-Z]/)
+      .withMessage("New password must contain at least one letter"),
+  ];
+};
 module.exports = {
   validationSchemaLogin,
   validationSchemaSignup,
   validationSchemaChangePassword,
   validationSchemaCreateProduct,
   validationSchemaBuyProduct,
+  validationSchemaForgetPassword,
+  validationSchemaResetPassword,
 };

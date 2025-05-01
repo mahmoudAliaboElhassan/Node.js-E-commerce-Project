@@ -24,31 +24,28 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
 
   const filter = {};
 
-  // Search by title or description
-  if (search) {
+   if (search) {
     filter.$or = [
       { title: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } },
     ];
   }
 
-  // Filter by price range
-  if (priceMin || priceMax) {
+   if (priceMin || priceMax) {
     filter.price = {};
     if (priceMin) filter.price.$gte = Number(priceMin);
     if (priceMax) filter.price.$lte = Number(priceMax);
   }
 
-  // Filter by seller
-  if (seller) {
+   if (seller) {
     filter.seller = seller;
   }
 
   const totalProducts = await Product.countDocuments(filter);
 
   const products = await Product.find(filter)
-    .populate("seller", "-password") // populate seller without password
-    .populate("buyers", "-password") // populate buyers without password
+    .populate("seller", "-password")  
+    .populate("buyers", "-password")  
     .sort({ [sortBy]: order === "asc" ? 1 : -1 })
     .skip((page - 1) * DOCUMENTS_PER_PAGE)
     .limit(DOCUMENTS_PER_PAGE);
