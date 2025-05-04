@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const { generateAccessToken } = require("../utils/generateToken");
 
 const signup = asyncWrapper(async (req, res, next) => {
-  const { firstName, lastName, email, password, role } = req.body;
+  const { name, email, password, role } = req.body;
   const avatar = req.file?.path || "/uploads/clothes.jpg";
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -34,8 +34,7 @@ const signup = asyncWrapper(async (req, res, next) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   const newUser = new User({
-    firstName,
-    lastName,
+    name,
     email,
     password: hashedPassword,
     role,

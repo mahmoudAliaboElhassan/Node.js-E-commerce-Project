@@ -3,16 +3,12 @@ var validator = require("validator");
 const userRoles = require("../utils/roles");
 
 const userSchema = new mongoose.Schema({
-  firstName: {
+  name: {
     type: String,
     min: [3, "Must be at least 3, got {VALUE}"],
     required: true,
   },
-  lastName: {
-    type: String,
-    min: [3, "Must be at least 3, got {VALUE}"],
-    required: true,
-  },
+ 
   email: {
     type: String,
     required: true,

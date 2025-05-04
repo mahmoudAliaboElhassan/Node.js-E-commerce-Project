@@ -21,16 +21,11 @@ const validationSchemaLogin = () => {
 };
 const validationSchemaSignup = () => {
   return [
-    body("firstName")
+    body("name")
       .notEmpty()
-      .withMessage("firstName can not be empty")
+      .withMessage("name can not be empty")
       .isLength({ min: 3 })
       .withMessage("firstName must be at least 3 characters long"),
-    body("lastName")
-      .notEmpty()
-      .withMessage("lastName can not be empty")
-      .isLength({ min: 3 })
-      .withMessage("lastName must be at least 3 characters long"),
     body("email")
       .notEmpty()
       .withMessage("email can not be empty")
