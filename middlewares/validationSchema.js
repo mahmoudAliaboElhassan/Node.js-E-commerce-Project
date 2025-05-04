@@ -25,7 +25,7 @@ const validationSchemaSignup = () => {
       .notEmpty()
       .withMessage("name can not be empty")
       .isLength({ min: 3 })
-      .withMessage("firstName must be at least 3 characters long"),
+      .withMessage("name must be at least 3 characters long"),
     body("email")
       .notEmpty()
       .withMessage("email can not be empty")
