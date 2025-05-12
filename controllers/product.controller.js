@@ -12,7 +12,7 @@ const { DOCUMENTS_PER_PAGE } = require("../utils/constants");
 const getAllProducts = asyncWrapper(async (req, res, next) => {
   let {
     search = "",
-    page = 1,
+    // page = 1,
     sortBy = "createdAt",
     order = "desc",
     priceMin,
@@ -20,42 +20,42 @@ const getAllProducts = asyncWrapper(async (req, res, next) => {
     seller,
   } = req.query;
 
-  page = parseInt(page);
+  // page = parseInt(page);
 
   const filter = {};
 
-   if (search) {
+  if (search) {
     filter.$or = [
       { title: { $regex: search, $options: "i" } },
       { description: { $regex: search, $options: "i" } },
     ];
   }
 
-   if (priceMin || priceMax) {
+  if (priceMin || priceMax) {
     filter.price = {};
     if (priceMin) filter.price.$gte = Number(priceMin);
     if (priceMax) filter.price.$lte = Number(priceMax);
   }
 
-   if (seller) {
+  if (seller) {
     filter.seller = seller;
   }
 
   const totalProducts = await Product.countDocuments(filter);
 
   const products = await Product.find(filter)
-    .populate("seller", "-password")  
-    .populate("buyers", "-password")  
-    .sort({ [sortBy]: order === "asc" ? 1 : -1 })
-    .skip((page - 1) * DOCUMENTS_PER_PAGE)
-    .limit(DOCUMENTS_PER_PAGE);
+    .populate("seller", "-password")
+    .populate("buyers", "-password")
+    .sort({ [sortBy]: order === "asc" ? 1 : -1 });
+  // .skip((page - 1) * DOCUMENTS_PER_PAGE)
+  // .limit(DOCUMENTS_PER_PAGE);
 
   res.status(200).json({
     status: httpStatusText.SUCESS,
     data: {
       total: totalProducts,
-      page,
-      pages: Math.ceil(totalProducts / DOCUMENTS_PER_PAGE),
+      // page,
+      // pages: Math.ceil(totalProducts / DOCUMENTS_PER_PAGE),
       count: products.length,
       products,
     },
@@ -99,7 +99,7 @@ const createProduct = asyncWrapper(async (req, res, next) => {
   }
   const productCover =
     req.files["productCover"]?.[0]?.path || "/uploads/clothes.jpg";
-  const productImgs = req.files["productImgs"]?.map((file) => file.path) || [
+  const productImgs = req.files["productImgs"]?.map((file) => file?.path) || [
     "/uploads/clothes.jpg",
   ];
   const newProduct = new Product({
@@ -148,7 +148,7 @@ const updateProduct = asyncWrapper(async (req, res, next) => {
   }
   const productCover =
     req.files["productCover"]?.[0]?.path || "/uploads/clothes.jpg";
-  const productImgs = req.files["productImgs"]?.map((file) => file.path) || [
+  const productImgs = req.files["productImgs"]?.map((file) => file?.path) || [
     "/uploads/clothes.jpg",
   ];
   const updatedProduct = await Product.findByIdAndUpdate(
@@ -234,17 +234,21 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
       )
     );
   }
+  if (product.quantity < 1) {
+    return next(
+      appError.create("Product is out of stock", 400, httpStatusText.FAIL)
+    );
+  }
 
+  if (quantity > product.quantity) {
+    return next(
+      appError.create("Not enough quantity in stock", 400, httpStatusText.FAIL)
+    );
+  }
   // Check price match
   if (price !== product.price * quantity) {
     return next(
       appError.create("Incorrect price provided", 400, httpStatusText.FAIL)
-    );
-  }
-
-  if (product.quantity < 1) {
-    return next(
-      appError.create("Product is out of stock", 400, httpStatusText.FAIL)
     );
   }
 
@@ -260,7 +264,7 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
 
   // Update product
   product.buyers.push(userId);
-  product.quantity -= 1;
+  product.quantity -= quantity;
 
   // Update user
   const user = await User.findById(userId);
