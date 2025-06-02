@@ -1,6 +1,6 @@
 # Node.js E-commerce Project
 
-This is a full-stack Node.js-based e-commerce application built to handle user authentication, product management, shopping cart, order processing, and more.  
+This is a back-end Node.js-based e-commerce application built to handle user authentication, product management, shopping cart, order processing, and more.  
 
 ## 🚀 Features
 
