@@ -1,89 +1,100 @@
-# Node.js E-commerce Project
 
-This is a back-end Node.js-based e-commerce application built to handle user authentication, product management, shopping cart, order processing, and more.  
+# Node.js eCommerce API
 
-## 🚀 Features
+A backend API for a simple eCommerce application built with Node.js, Express, and MongoDB. This project supports user authentication, product management, order processing, and AI integration.
 
-✅ User signup, login, password reset  
-✅ JWT authentication with cookies  
-✅ Product CRUD (create, read, update, delete)  
-✅ Cart management  
-✅ Order placement and tracking  
-✅ Admin dashboard for managing products and users  
-✅ Real-time updates using Socket.io  
-✅ Secure password hashing with bcrypt  
-✅ Image upload handling with Multer  
-✅ RESTful API design  
+## Features
 
-## 🛠️ Tech Stack
+- User registration and authentication
+- CRUD operations for products
+- Order management with status updates
+- Password management
+- AI-powered endpoints (customizable)
+- JWT-based authentication with cookies
+- Pagination and filtering for products and orders
+- Error handling and validation with express-validator
+- Security best practices (Helmet, CORS, Morgan logging)
 
-- **Backend:** Node.js, Express.js  
-- **Database:** MongoDB, Mongoose  
-- **Authentication:** JWT, bcrypt  
-- **File Uploads:** Multer  
-- **Real-time:** Socket.io  
-- **Validation:** express-validator, validator  
-- **Environment:** dotenv  
-- **Security:** CORS, Helmet, rate limiting  
+## Technologies Used
 
-## 📦 Installation
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JWT for authentication
+- dotenv for environment variables
+- express-validator for input validation
+- Helmet for security headers
+- Morgan for HTTP request logging
+- Cors for handling cross-origin requests
+- Cookie-parser for cookie handling
 
-1️⃣ Clone the repo  
-```bash
-git clone https://github.com/mahmoudAliaboElhassan/Node.js-E-commerce-Project.git
-cd Node.js-E-commerce-Project
-```
+## Installation
 
-2️⃣ Install dependencies  
-```bash
-npm install
-```
+1. Clone the repository:
 
-3️⃣ Set up environment variables  
-Create a `.env` file and configure:
-```
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-```
+   ```bash
+   git clone https://github.com/yourusername/ecommerce-api.git
+   cd ecommerce-api
+   ```
 
-4️⃣ Run the project  
-```bash
-npm run dev
-```
+2. Install dependencies:
 
-## 📂 Folder Structure
+   ```bash
+   npm install
+   ```
 
-```
-/controllers
-/routes
-/models
-/middlewares
-/utils
-/public
-```
+3. Create a `.env` file in the root directory and add your environment variables:
+
+   ```env
+   PORT=5000
+   MONGO_URL=your_mongodb_connection_string
+   JWT_SECRET_KEY=your_jwt_secret_key
+   ```
+
+4. Start the server:
+
+   ```bash
+   npm start
+   ```
+
+   The server will run on `http://localhost:5000` (or the port you specified).
 
 ## 📄 API Endpoints
 
-| Method | Endpoint          | Description             |
-|--------|-------------------|-------------------------|
-| POST   | /api/auth/signup  | Register new user       |
-| POST   | /api/auth/login   | User login              |
-| GET    | /api/products     | List all products       |
-| POST   | /api/products     | Add a new product (admin) |
-| PUT    | /api/products/:id | Update product (admin)  |
-| DELETE | /api/products/:id | Delete product (admin)  |
-| POST   | /api/orders       | Place an order          |
+| Method | Endpoint                          | Description                          |
+|--------|---------------------------------|------------------------------------|
+| POST   | /api/users/register              | Register a new user                 |
+| POST   | /api/users/login                 | Login user                         |
+| GET    | /api/users/:id                   | Get user by ID                    |
+| POST   | /api/users/change-password/:id   | Change password                    |
+| POST   | /api/user-password/forget        | Forget password                    |
+| POST   | /api/user-password/reset/:id/:token | Reset password                  |
 
-_(You can expand this table with more routes you have!)_
+| GET    | /api/products                   | Get all products with filtering and pagination |
+| GET    | /api/products/:id              | Get product by ID                     |
+| POST   | /api/products                  | Create new product                   |
+| PUT    | /api/products/:id              | Update product                      |
+| DELETE | /api/products/:id              | Delete product                     |
+| POST   | /api/products/:id/buy          | Buy a product                      |
 
-## 💡 Future Improvements
+| GET    | /api/orders                    | Get all orders (paginated)         |
+| GET    | /api/orders/:id                | Get order by ID                    |
+| PUT    | /api/orders/:id/status         | Update order status                |
 
-- Add payment integration (Stripe/PayPal)  
-- Add product reviews & ratings  
-- Enhance admin analytics dashboard  
-- Add user profile management  
+### Other Routes
 
-## 🤝 Contributing
+- Password management, AI endpoints, etc.
 
-Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
+## Error Handling
+
+The API returns structured error responses with HTTP status codes and descriptive messages.
+
+## Postman Collection
+
+You can find the Postman collection for testing the API here:  
+[Postman Collection](https://node-js-e-commerce-project.vercel.app/)
+
+## Contributing
+
+Contributions are welcome! Please open issues or pull requests for bug fixes and new features.
+
