@@ -37,6 +37,7 @@ router
     verifyToken,
     validationSchemaChangePassword(),
     usersController.change_password
-  );
+);
+  router.route("/refresh-token").post(usersController.refreshToken)
 
 module.exports = router;

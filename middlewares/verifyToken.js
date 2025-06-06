@@ -4,8 +4,8 @@ const httpStatusText = require("../utils/httpStatusText");
 
 module.exports = (req, res, next) => {
   console.log("cookies", req.cookies);
-  const token = req.cookies.JwtToken;
-
+  const token = req.cookies.JwtAcessToken;
+console.log("cookies from middleware",token)
   if (!token) {
     const error = appError.create("Access denied", 401, httpStatusText.FAIL);
     return next(error);
