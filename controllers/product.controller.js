@@ -198,7 +198,7 @@ const deleteProduct = asyncWrapper(async (req, res, next) => {
 });
 
 const buyProduct = asyncWrapper(async (req, res, next) => {
-  const token = req.cookies.JwtToken;
+  const token = req.cookies.JwtAcessToken;
   console.log("token", token);
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
