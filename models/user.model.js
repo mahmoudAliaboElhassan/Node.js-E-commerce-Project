@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     min: [3, "Must be at least 3, got {VALUE}"],
     required: true,
   },
- 
+
   email: {
     type: String,
     required: true,

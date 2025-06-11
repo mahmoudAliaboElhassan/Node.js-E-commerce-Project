@@ -75,7 +75,4 @@ app.listen(process.env.PORT, () => {
   console.log(`running on port ${process.env.PORT}`);
 });
 
-const crypto = require("crypto");
-const jwtSecretKey = crypto.randomBytes(32).toString("hex");
-console.log(jwtSecretKey);
-// to create jwt secret key
+module.exports = app;

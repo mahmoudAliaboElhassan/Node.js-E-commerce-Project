@@ -5,8 +5,10 @@ const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const { generateAccessToken,generateRefreshToken } = require("../utils/generateToken");
-
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../utils/generateToken");
 
 const signup = asyncWrapper(async (req, res, next) => {
   const { name, email, password, role } = req.body;
@@ -80,17 +82,19 @@ const login = asyncWrapper(async (req, res, next) => {
         role: user.role,
       });
 
-  res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-  });
-  res.cookie("JwtAcessToken", accessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-  });
-      res.status(200).json({ status: httpStatusText.SUCESS, data: { user, accessToken } });
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+      res.cookie("JwtAcessToken", accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+      res
+        .status(200)
+        .json({ status: httpStatusText.SUCESS, data: { user, accessToken } });
     } else {
       const error = appError.create(
         "Invalid password or email",
@@ -164,14 +168,14 @@ const change_password = asyncWrapper(async (req, res, next) => {
 
   // Update the password
   await User.findByIdAndUpdate(id, { password: hashedPassword });
-  res.json({
+  return res.status(200).json({
     staus: httpStatusText.SUCESS,
     data: {
       message: "user password updated successfully",
     },
   });
 });
- 
+
 const logout = asyncWrapper(async (req, res, next) => {
   res.clearCookie("JwtAcessToken");
   res.status(200).json({
@@ -181,7 +185,7 @@ const logout = asyncWrapper(async (req, res, next) => {
   return { message: "user logged out successfully" };
 });
 
-const refreshToken = asyncWrapper(async( req, res,err) => {
+const refreshToken = asyncWrapper(async (req, res, err) => {
   try {
     const refreshToken = req.cookies.refreshToken;
     if (!refreshToken) {
@@ -190,31 +194,27 @@ const refreshToken = asyncWrapper(async( req, res,err) => {
         .json({ message: "No refresh token provided, please login" });
     }
 
-    jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_KEY,
-      (err, decoded) => {
-        if (err) {
-          return res
-            .status(403)
-            .json({ message: "Refresh token expired, please login again" });
-        }
-        console.log("decoded from refresh",decoded)
-       const newAccessToken =   generateAccessToken({
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_KEY, (err, decoded) => {
+      if (err) {
+        return res
+          .status(403)
+          .json({ message: "Refresh token expired, please login again" });
+      }
+      console.log("decoded from refresh", decoded);
+      const newAccessToken = generateAccessToken({
         email: decoded.email,
         id: decoded._id,
         role: decoded.role,
-       });
-        res.cookie("JwtAcessToken", newAccessToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "strict",
-  });
-        res.json({ newAccessToken });
-      }
-    );
+      });
+      res.cookie("JwtAcessToken", newAccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "strict",
+      });
+      res.json({ newAccessToken });
+    });
   } catch (error) {
     res.status(500).json({ message: "Error refreshing token", error });
   }
-}) 
-module.exports = { login, signup, change_password, logout,refreshToken };
+});
+module.exports = { login, signup, change_password, logout, refreshToken };
