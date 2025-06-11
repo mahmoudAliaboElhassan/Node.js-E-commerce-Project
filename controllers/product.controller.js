@@ -207,6 +207,11 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
   const productId = req.params.id;
   const { price, quantity } = req.body;
 
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError.create("Product not found", 404, httpStatusText.FAIL));
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     const error = appError.create(
@@ -218,11 +223,6 @@ const buyProduct = asyncWrapper(async (req, res, next) => {
       httpStatusText.FAIL
     );
     return next(error);
-  }
-
-  const product = await Product.findById(productId);
-  if (!product) {
-    return next(appError.create("Product not found", 404, httpStatusText.FAIL));
   }
 
   if (product.seller.toString() === userId) {

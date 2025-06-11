@@ -86,30 +86,30 @@ describe("Product Routes", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.data.product).toBeDefined();
   });
-  // it("POST /products/:id/buy - should return 200 for valid purchase", async () => {
-  //   const user = new User({
-  //     name: "Test Buyer",
-  //     email: "testbuyer@example.com",
-  //     password: "hashe123fJH(dpassword",
-  //     role: "USER",
-  //   });
-  //   await user.save();
-  //   const accessToken = generateAccessToken({
-  //     email: user.email,
-  //     id: user._id,
-  //     role: user.role,
-  //   });
-  //   const res = await request(app)
-  //     .post(`/api/products/${testProduct._id}/buy`)
-  //     .set("Cookie", [`JwtAcessToken=${accessToken}`])
-  //     .send({ price: testProduct.price * 2, quantity: 2 });
+  it("POST /products/:id/buy - should return 200 for valid purchase", async () => {
+    const emailUser = `${Date.now()}@example.com`;
+    const user = new User({
+      name: "Test Buyer",
+      email: emailUser,
+      password: "hashe123fJH(dpassword",
+      role: "USER",
+    });
+    await user.save();
+    const accessToken = generateAccessToken({
+      email: user.email,
+      id: user._id,
+      role: user.role,
+    });
+    const res = await request(app)
+      .post(`/api/products/buy/${testProduct._id}`)
+      .set("Cookie", [`JwtAcessToken=${accessToken}`])
+      .send({ price: testProduct.price * 2, quantity: 2 });
 
-  //   expect(res.statusCode).toBe(200);
-  //   expect(res.body.data.message).toBe("Product purchased successfully");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.message).toBe("Product purchased successfully");
 
-  //   await User.findByIdAndDelete(buyer._id);
-  //   jwt.verify.mockRestore();
-  // });
+    await User.findByIdAndDelete(user._id);
+  });
 
   it("GET /products/:id - should return 404 if product not found", async () => {
     const nonExistentId = "60d21b4667d0d8992e610c85";
@@ -186,8 +186,22 @@ describe("Product Routes", () => {
   // ──────────── BUY PRODUCT ────────────
 
   it("POST /products/:id/buy - should return 404 if product does not exist", async () => {
+    const emailUser = `${Date.now()}@example.com`;
+    const user = new User({
+      name: "Test Buyer",
+      email: emailUser,
+      password: "hashe123fJH(dpassword",
+      role: "USER",
+    });
+    await user.save();
+    const accessToken = generateAccessToken({
+      email: user.email,
+      id: user._id,
+      role: user.role,
+    });
     const res = await request(app)
-      .post(`/api/products/60d21b4667d0d8992e610c85/buy`)
+      .post(`/api/products/buy/60ddc973fc13ae1b5c000001`)
+      .set("Cookie", [`JwtAcessToken=${accessToken}`])
       .send({ price: 100, quantity: 1 });
 
     expect(res.statusCode).toBe(404);

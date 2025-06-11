@@ -168,12 +168,13 @@ const change_password = asyncWrapper(async (req, res, next) => {
 
   // Update the password
   await User.findByIdAndUpdate(id, { password: hashedPassword });
-  return res.status(200).json({
-    staus: httpStatusText.SUCESS,
+  res.status(200).json({
+    status: httpStatusText.SUCESS,
     data: {
-      message: "user password updated successfully",
+      message: "User password updated successfully",
     },
   });
+  return { message: "user password updated successfully" };
 });
 
 const logout = asyncWrapper(async (req, res, next) => {

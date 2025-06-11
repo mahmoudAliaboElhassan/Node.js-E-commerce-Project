@@ -153,8 +153,12 @@ describe("User Routes", () => {
   });
 
   // ──────────── CHANGE PASSWORD TESTS ────────────
-  it("POST /change-pasword/:id - 200 for valid change", async () => {
+  it("200 for valid password change", async () => {
+    const strongPassword = "Str0ng$Pass123";
+    const newStrongPassword = "An0ther$trong1";
     const uniqueEmail = `changepass${Date.now()}@example.com`;
+
+    // Create a user
     const user = new User({
       name: "ChangePass",
       email: uniqueEmail,
@@ -174,12 +178,14 @@ describe("User Routes", () => {
       .set("Cookie", [`JwtAcessToken=${token}`])
       .send({
         password: strongPassword,
-        newPassword: "An0ther$trong1",
+        newPassword: newStrongPassword,
       });
 
     expect(res.statusCode).toBe(200);
-    console.log("res.body", res.body);
+    expect(res.body.status).toBe("success");
+    expect(res.body.data.message).toBe("User password updated successfully");
 
+    // Clean up
     await User.findByIdAndDelete(user._id);
   });
 
