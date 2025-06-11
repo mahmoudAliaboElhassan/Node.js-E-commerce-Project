@@ -1,4 +1,3 @@
-
 # Node.js eCommerce API
 
 A backend API for a simple eCommerce application built with Node.js, Express, and MongoDB. This project supports user authentication, product management, order processing, and AI integration.
@@ -61,23 +60,23 @@ A backend API for a simple eCommerce application built with Node.js, Express, an
 
 ## 📄 API Endpoints
 
-| Method | Endpoint                          | Description                          |
-|--------|---------------------------------|------------------------------------|
-| POST   | /api/users/register              | Register a new user                 |
-| POST   | /api/users/login                 | Login user                         |
-| GET    | /api/users/:id                   | Get user by ID                    |
-| POST   | /api/users/change-password/:id   | Change password                    |
-| POST   | /api/user-password/forget        | Forget password                    |
-| POST   | /api/user-password/reset/:id/:token | Reset password                  |
-| GET    | /api/products                   | Get all products with filtering and pagination |
-| GET    | /api/products/:id              | Get product by ID                     |
-| POST   | /api/products                  | Create new product                   |
-| PUT    | /api/products/:id              | Update product                      |
-| DELETE | /api/products/:id              | Delete product                     |
-| POST   | /api/products/:id/buy          | Buy a product                      |
-| GET    | /api/orders                    | Get all orders (paginated)         |
-| GET    | /api/orders/:id                | Get order by ID                    |
-| PUT    | /api/orders/:id/status         | Update order status                |
+| Method | Endpoint                            | Description                                    |
+| ------ | ----------------------------------- | ---------------------------------------------- |
+| POST   | /api/users/register                 | Register a new user                            |
+| POST   | /api/users/login                    | Login user                                     |
+| GET    | /api/users/:id                      | Get user by ID                                 |
+| POST   | /api/users/change-password/:id      | Change password                                |
+| POST   | /api/user-password/forget           | Forget password                                |
+| POST   | /api/user-password/reset/:id/:token | Reset password                                 |
+| GET    | /api/products                       | Get all products with filtering and pagination |
+| GET    | /api/products/:id                   | Get product by ID                              |
+| POST   | /api/products                       | Create new product                             |
+| PUT    | /api/products/:id                   | Update product                                 |
+| DELETE | /api/products/:id                   | Delete product                                 |
+| POST   | /api/products/:id/buy               | Buy a product                                  |
+| GET    | /api/orders                         | Get all orders (paginated)                     |
+| GET    | /api/orders/:id                     | Get order by ID                                |
+| PUT    | /api/orders/:id/status              | Update order status                            |
 
 ### Other Routes
 
@@ -105,7 +104,31 @@ You can find the Postman collection for testing the API here:
 - Add email notifications for order updates and password changes
 - Optimize API performance and implement caching strategies
 
+## 🧪 Testing
+
+The API includes a comprehensive test suite implemented with Jest and Supertest, ensuring reliability and proper functionality across all endpoints.
+
+### Test Configuration
+
+- **Test Environment**: Separate MongoDB database for testing
+- **Test Runner**: Jest with coverage reporting
+- **HTTP Assertions**: Supertest for endpoint testing
+- **Mocking**: Manual mocks for external services
+
+### How to Run Tests
+
+```bash
+# Run all tests with coverage reporting
+npm test
+
+# Run specific test files
+npm test -- <path-to-test-file>
+
+# Run in watch mode
+npm test -- --watch
+
 ## Contributing
 
 Contributions are welcome! Please open issues or pull requests for bug fixes and new features.
 
+```
