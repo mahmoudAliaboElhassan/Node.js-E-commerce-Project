@@ -127,8 +127,8 @@ npm test -- <path-to-test-file>
 # Run in watch mode
 npm test -- --watch
 
+```
+
 ## Contributing
 
 Contributions are welcome! Please open issues or pull requests for bug fixes and new features.
-
-```
